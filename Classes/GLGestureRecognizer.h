@@ -9,12 +9,12 @@
 
 
 @interface GLGestureRecognizer : NSObject {
-	NSMutableArray *input;
+	NSMutableArray *touchPoints;
 	NSMutableArray *resampledPoints;
 	NSDictionary *templates;
 }
 @property (nonatomic, retain) NSDictionary *templates;
-@property (nonatomic, retain) NSArray *touchPoints;
+@property (nonatomic, retain) NSMutableArray *touchPoints;
 @property (nonatomic, retain) NSArray *resampledPoints;
 - (BOOL)loadTemplatesFromFile:(NSString*)path;
 - (void)addTouches:(NSSet*)set fromView:(UIView *)view;

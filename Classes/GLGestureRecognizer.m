@@ -13,10 +13,6 @@
 
 #define kSamplePoints (16)
 
-@interface GLGestureRecognizer ()
-@property (nonatomic, retain) NSMutableArray *input;
-@end
-
 // Utility/Math Functions:
 CGPoint Centroid(CGPoint *samples, int samplePoints);
 void Translate(CGPoint *samples, int samplePoints, float x, float y);
@@ -30,13 +26,13 @@ float DistanceAtBestAngle(CGPoint *samples, int samplePoints, CGPoint *template)
 
 @implementation GLGestureRecognizer
 
-@synthesize input, templates, resampledPoints, touchPoints=input;
+@synthesize templates, resampledPoints, touchPoints;
 
 - (id)init
 {
 	if (self = [super init])
 	{
-		self.input = [NSMutableArray array];
+		self.touchPoints = [NSMutableArray array];
 		self.templates = [NSDictionary dictionary];
 		self.resampledPoints = [NSMutableArray array];
 	}
@@ -44,7 +40,7 @@ float DistanceAtBestAngle(CGPoint *samples, int samplePoints, CGPoint *template)
 }
 - (void)dealloc
 {
-	self.input = nil;
+	self.touchPoints = nil;
 	self.templates = nil;
 	[super dealloc];
 }
@@ -79,11 +75,11 @@ float DistanceAtBestAngle(CGPoint *samples, int samplePoints, CGPoint *template)
 }
 - (void)addTouchAtPoint:(CGPoint)point
 {
-	[input addObject:[NSValue valueWithCGPoint:point]];
+	[[self touchPoints] addObject:[NSValue valueWithCGPoint:point]];
 }
 - (void)resetTouches
 {
-	self.input = [NSMutableArray array];
+	self.touchPoints = [NSMutableArray array];
 }
 - (NSString *)findBestMatch
 {
@@ -100,12 +96,12 @@ float DistanceAtBestAngle(CGPoint *samples, int samplePoints, CGPoint *template)
 	int i;
 	const int samplePoints = kSamplePoints;
 	CGPoint samples[samplePoints];
-	int c = [input count];
+	int c = [[self touchPoints] count];
 	
 	// Load up the samples.  We use a very simplistic method for this; the JavaScript version is much more sophisticated.
 	for (i = 0; i < samplePoints; i++)
 	{
-		samples[i] = [[input objectAtIndex:MAX(0, (c-1)*i/(samplePoints-1))] CGPointValue];
+		samples[i] = [[[self touchPoints] objectAtIndex:MAX(0, (c-1)*i/(samplePoints-1))] CGPointValue];
 	}
 	
 	CGPoint center = Centroid(samples, samplePoints);
