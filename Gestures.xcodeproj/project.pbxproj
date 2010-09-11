@@ -15,6 +15,7 @@
 		2899E5220DE3E06400AC0155 /* GesturesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2899E5210DE3E06400AC0155 /* GesturesViewController.xib */; };
 		28AD733F0D9D9553002E5188 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 28AD733E0D9D9553002E5188 /* MainWindow.xib */; };
 		28D7ACF80DDB3853001CB0EB /* GesturesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 28D7ACF70DDB3853001CB0EB /* GesturesViewController.m */; };
+		664F538A123BE1FC00037D3C /* GLGestureRecognizer+JSONTemplates.m in Sources */ = {isa = PBXBuildFile; fileRef = 664F5389123BE1FC00037D3C /* GLGestureRecognizer+JSONTemplates.m */; };
 		66597BE90FA682C100CCA91E /* GestureView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66597BE80FA682C100CCA91E /* GestureView.m */; };
 		66597CFF0FA6AEBB00CCA91E /* NSCharacterSet_Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 66597CF10FA6AEBB00CCA91E /* NSCharacterSet_Extensions.m */; };
 		66597D000FA6AEBB00CCA91E /* CDataScanner_Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 66597CF30FA6AEBB00CCA91E /* CDataScanner_Extensions.m */; };
@@ -40,6 +41,9 @@
 		28D7ACF70DDB3853001CB0EB /* GesturesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GesturesViewController.m; sourceTree = "<group>"; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		32CA4F630368D1EE00C91783 /* Gestures_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Gestures_Prefix.pch; sourceTree = "<group>"; };
+		664F537F123BE0E900037D3C /* README.markdown */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.markdown; sourceTree = "<group>"; wrapsLines = 1; };
+		664F5388123BE1FC00037D3C /* GLGestureRecognizer+JSONTemplates.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GLGestureRecognizer+JSONTemplates.h"; sourceTree = "<group>"; };
+		664F5389123BE1FC00037D3C /* GLGestureRecognizer+JSONTemplates.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GLGestureRecognizer+JSONTemplates.m"; sourceTree = "<group>"; };
 		66597BE70FA682C100CCA91E /* GestureView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GestureView.h; sourceTree = "<group>"; };
 		66597BE80FA682C100CCA91E /* GestureView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GestureView.m; sourceTree = "<group>"; };
 		66597CF00FA6AEBB00CCA91E /* NSCharacterSet_Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSCharacterSet_Extensions.h; sourceTree = "<group>"; };
@@ -79,6 +83,7 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				664F5387123BE1B700037D3C /* GLGestureRecognizer */,
 				66597CEE0FA6AEBB00CCA91E /* TouchJSON */,
 				1D3623240D0F684500981E51 /* GesturesAppDelegate.h */,
 				1D3623250D0F684500981E51 /* GesturesAppDelegate.m */,
@@ -86,8 +91,6 @@
 				28D7ACF70DDB3853001CB0EB /* GesturesViewController.m */,
 				66597BE70FA682C100CCA91E /* GestureView.h */,
 				66597BE80FA682C100CCA91E /* GestureView.m */,
-				66597D650FA7B95300CCA91E /* GLGestureRecognizer.h */,
-				66597D660FA7B95300CCA91E /* GLGestureRecognizer.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -107,6 +110,7 @@
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
+				664F537E123BE0CF00037D3C /* Documentation */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
 			);
 			name = CustomTemplate;
@@ -140,6 +144,25 @@
 				288765A40DF7441C002DB57D /* CoreGraphics.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		664F537E123BE0CF00037D3C /* Documentation */ = {
+			isa = PBXGroup;
+			children = (
+				664F537F123BE0E900037D3C /* README.markdown */,
+			);
+			name = Documentation;
+			sourceTree = "<group>";
+		};
+		664F5387123BE1B700037D3C /* GLGestureRecognizer */ = {
+			isa = PBXGroup;
+			children = (
+				66597D650FA7B95300CCA91E /* GLGestureRecognizer.h */,
+				66597D660FA7B95300CCA91E /* GLGestureRecognizer.m */,
+				664F5388123BE1FC00037D3C /* GLGestureRecognizer+JSONTemplates.h */,
+				664F5389123BE1FC00037D3C /* GLGestureRecognizer+JSONTemplates.m */,
+			);
+			name = GLGestureRecognizer;
 			sourceTree = "<group>";
 		};
 		66597CEE0FA6AEBB00CCA91E /* TouchJSON */ = {
@@ -206,7 +229,14 @@
 			isa = PBXProject;
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Gestures" */;
 			compatibilityVersion = "Xcode 3.1";
+			developmentRegion = English;
 			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* CustomTemplate */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -246,6 +276,7 @@
 				66597D040FA6AEBB00CCA91E /* CJSONDeserializer.m in Sources */,
 				66597D050FA6AEBB00CCA91E /* CDataScanner.m in Sources */,
 				66597D670FA7B95300CCA91E /* GLGestureRecognizer.m in Sources */,
+				664F538A123BE1FC00037D3C /* GLGestureRecognizer+JSONTemplates.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -288,7 +319,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
-				SDKROOT = iphoneos2.2.1;
+				SDKROOT = iphoneos4.1;
 			};
 			name = Debug;
 		};
@@ -301,7 +332,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
-				SDKROOT = iphoneos2.2.1;
+				SDKROOT = iphoneos4.1;
 			};
 			name = Release;
 		};

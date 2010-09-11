@@ -3,12 +3,12 @@
 //  Gestures
 //
 //  Created by Adam Preble on 4/27/09.
-//  Copyright 2009 Giraffe Lab. All rights reserved.
+//  Copyright 2010 Giraffe Lab. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 
-#import "GLGestureRecognizer.h"
+@class GLGestureRecognizer;
 
 @interface GestureView : UIView {
 	NSString *caption;

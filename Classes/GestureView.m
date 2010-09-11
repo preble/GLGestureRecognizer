@@ -3,10 +3,12 @@
 //  Gestures
 //
 //  Created by Adam Preble on 4/27/09.
-//  Copyright 2009 Giraffe Lab. All rights reserved.
+//  Copyright 2010 Giraffe Lab. All rights reserved.
 //
 
 #import "GestureView.h"
+#import "GLGestureRecognizer.h"
+#import "GLGestureRecognizer+JSONTemplates.h"
 
 @interface GestureView ()
 @end
@@ -31,7 +33,8 @@
 - (void)awakeFromNib
 {
 	recognizer = [[GLGestureRecognizer alloc] init];
-	[recognizer loadTemplatesFromFile:[[NSBundle mainBundle] pathForResource:@"Gestures" ofType:@"json"]];
+	NSData *jsonData = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Gestures" ofType:@"json"]];
+	[recognizer loadTemplatesFromJsonData:jsonData];
 	
 	self.caption = @"";
 }
