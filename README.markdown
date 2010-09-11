@@ -1,6 +1,6 @@
 ## GLGestureRecognizer
 
-GLGestureRecognizer is an Objective-C implementation of the [$1 Unistroke Recognizer](http://depts.washington.edu/aimgroup/proj/dollar/), a simple gesture recognition algorithm (see Credits below). It is made available here in the form of an iPhone application project. It was implemented over the course of a couple evenings in late April 2009 by Adam Preble.
+GLGestureRecognizer is an Objective-C implementation of the [$1 Unistroke Recognizer](http://depts.washington.edu/aimgroup/proj/dollar/), a simple gesture recognition algorithm (see Credits below). It is made available here in the form of an Objective-C class and iPhone demo application. It was implemented over the course of a couple evenings in late April 2009 by Adam Preble.
 
 
 ## Prerequisites
@@ -35,7 +35,9 @@ GLGestureRecognizer is available as open source, with the only requirement of us
 
 ## Credits
 
-$1 Unistroke Recognizer: Jacob O. Wobbrock, Andrew D. Wilson, Yang Li [http://depts.washington.edu/aimgroup/proj/dollar/]()
+The $1 Unistroke Recognizer algorithm used in GLGestureRecognizer is based on the JavaScript implementation at [http://depts.washington.edu/aimgroup/proj/dollar/](), which is described in the following UIST 2007 paper:
+
+> Wobbrock, J.O., Wilson, A.D. and Li, Y. (2007). Gestures without libraries, toolkits or training: A $1 recognizer for user interface prototypes. _Proceedings of the ACM Symposium on User Interface Software and Technology (UIST '07)_. Newport, Rhode Island (October 7-10, 2007). New York: ACM Press, 159-168.
 
 Implemented in Objective-C with iPhone demo project by Adam Preble of Giraffe Lab [http://giraffelab.com/code/GLGestureRecognizer]()
 
