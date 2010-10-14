@@ -154,9 +154,9 @@ float DistanceAtBestAngle(CGPoint *samples, int samplePoints, CGPoint *template)
 	[string appendString:@"],\n"];
 	NSLog(@"Read:\n%@", string);
 #endif
-	NSString *outName = [[NSString alloc] initWithString:bestTemplateName];
+	[bestTemplateName retain]; // +1 retain count because it is autoreleased, and we're about to drain the pool.
 	[pool release];
-	return [outName autorelease];
+	return [bestTemplateName autorelease];
 }
 
 @end
