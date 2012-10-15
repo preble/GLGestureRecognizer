@@ -8,9 +8,6 @@
 
 #import "GLGestureRecognizer+JSONTemplates.h"
 
-// From TouchCode.com's TouchJSON:
-#import "CJSONDeserializer.h"
-
 @implementation GLGestureRecognizer (JSONTemplates)
 
 - (BOOL)loadTemplatesFromJsonData:(NSData *)jsonData
@@ -21,19 +18,18 @@
 	// (A dictionary with string key names and an array of 2-element array coordinate pairs.)
 	// To populate the file, use the output of the NSLog()s in findBestMatch..: after drawing a shape.
 	NSError *error = nil;
-	NSDictionary *dict = [[CJSONDeserializer deserializer] deserializeAsDictionary:jsonData error:&error];
+	NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:&error];
 	NSMutableDictionary *output = [NSMutableDictionary dictionary];
-	for (NSString *key in [dict allKeys])
-	{
-		NSArray *value = [dict objectForKey:key];
-		NSMutableArray *points = [NSMutableArray array];
+	[dict enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSArray *value, BOOL *stop) {
+		NSMutableArray *points = [NSMutableArray arrayWithCapacity:value.count];
 		for (NSArray *pointArray in value)
 		{
-			[points addObject:[NSValue valueWithCGPoint:CGPointMake([[pointArray objectAtIndex:0] floatValue], [[pointArray objectAtIndex:1] floatValue])]];
+			CGPoint point = CGPointMake([pointArray[0] floatValue], [pointArray[1] floatValue]);
+			[points addObject:[NSValue valueWithCGPoint:point]];
 		}
-		[output setObject:points forKey:key];
-	}
-	self.templates = output;
+		output[key] = [points copy]; // mutable to immutable
+	}];
+	self.templates = [output copy]; // mutable to immuatable
 	return YES;
 }
 

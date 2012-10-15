@@ -1,6 +1,5 @@
 //
 //  GLGestureRecognizer.m
-//  Gestures
 //
 //  Created by Adam Preble on 4/28/09.  adam@giraffelab.com
 //  
@@ -23,6 +22,16 @@ float DistanceAtAngle(CGPoint *samples, int samplePoints, CGPoint *template, flo
 float DistanceAtBestAngle(CGPoint *samples, int samplePoints, CGPoint *template);
 
 
+@interface GLGestureRecognizer () {
+	NSMutableArray *touchPoints;
+	NSMutableArray *resampledPoints;
+	NSDictionary *templates;
+}
+@property (nonatomic, readwrite) NSArray *touchPoints;
+@property (nonatomic, readwrite) NSArray *resampledPoints;
+
+@end
+
 @implementation GLGestureRecognizer
 
 @synthesize templates, resampledPoints, touchPoints;
@@ -37,12 +46,6 @@ float DistanceAtBestAngle(CGPoint *samples, int samplePoints, CGPoint *template)
 	}
 	return self;
 }
-- (void)dealloc
-{
-	self.touchPoints = nil;
-	self.templates = nil;
-	[super dealloc];
-}
 
 - (void)addTouches:(NSSet*)set fromView:(UIView *)view
 {
@@ -50,7 +53,7 @@ float DistanceAtBestAngle(CGPoint *samples, int samplePoints, CGPoint *template)
 }
 - (void)addTouchAtPoint:(CGPoint)point
 {
-	[[self touchPoints] addObject:[NSValue valueWithCGPoint:point]];
+	[touchPoints addObject:[NSValue valueWithCGPoint:point]];
 }
 - (void)resetTouches
 {
@@ -62,101 +65,100 @@ float DistanceAtBestAngle(CGPoint *samples, int samplePoints, CGPoint *template)
 }
 - (NSString *)findBestMatchCenter:(CGPoint*)outCenter angle:(float*)outRadians score:(float*)outScore
 {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	// Adapted from description on: http://depts.washington.edu/aimgroup/proj/dollar/ / http://blog.makezine.com/archive/2008/11/gesture_recognition_for_javasc.html
-	// 1. Resampling the recorded path into a fixed number of points that are evenly spaced along the path
-	// 2. Rotate the path so that the first point is directly to the right of the path's center of mass
-	// 3. Scaling the path (non-uniformly) to a fixed height and width
-	// 4. For each reference path, calculating the average distance for the corresponding points in the input path. The path with the lowest average point distance is the match.
-	int i;
-	const int samplePoints = kSamplePoints;
-	CGPoint samples[samplePoints];
-	int c = [[self touchPoints] count];
-	
-	// Load up the samples.  We use a very simplistic method for this; the JavaScript version is much more sophisticated.
-	for (i = 0; i < samplePoints; i++)
-	{
-		samples[i] = [[[self touchPoints] objectAtIndex:MAX(0, (c-1)*i/(samplePoints-1))] CGPointValue];
-	}
-	
-	CGPoint center = Centroid(samples, samplePoints);
-	if (outCenter)
-		*outCenter = center;
-	Translate(samples, samplePoints, -center.x, -center.y); // Recenter
-	
-	// Now rotate the path around 0,0, since the points have been transformed to that point.
-	// Find the angle of the first point:
-	CGPoint firstPoint = samples[0];
-	float firstPointAngle = atan2(firstPoint.y, firstPoint.x);
-	NSLog(@"firstPointAngle=%0.2f", firstPointAngle*360.0f/(2.0f*M_PI));
-	if (outRadians)
-		*outRadians = firstPointAngle;
-	Rotate(samples, samplePoints, -firstPointAngle);
-	
-	CGPoint lowerLeft, upperRight; // For finding the boundaries of the gesture
-	for (i = 0; i < samplePoints; i++)
-	{
-		CGPoint pt = samples[i];
-		if (pt.x < lowerLeft.x)
-			lowerLeft.x = pt.x;
-		if (pt.y < lowerLeft.y)
-			lowerLeft.y = pt.y;
-		if (pt.x > upperRight.x)
-			upperRight.x = pt.x;
-		if (pt.y > upperRight.y)
-			upperRight.y = pt.y;
-	}
-	float scale = 2.0f/MAX(upperRight.x - lowerLeft.x, upperRight.y - lowerLeft.y);
-	Scale(samples, samplePoints, scale, scale);
-	
-	center = Centroid(samples, samplePoints);
-	Translate(samples, samplePoints, -center.x, -center.y); // Recenter
-	
-	// Now we can compare the samples against our known samples:
-	NSString *bestTemplateName = nil;
-	float best = INFINITY;
-	for (NSString *templateName in [templates allKeys])
-	{
-		NSArray *templateSamples = [templates objectForKey:templateName];
-		CGPoint template[samplePoints];
-		NSAssert(samplePoints == [templateSamples count], @"Template size mismatch");
+	@autoreleasepool {
+		// Adapted from description on: http://depts.washington.edu/aimgroup/proj/dollar/ / http://blog.makezine.com/archive/2008/11/gesture_recognition_for_javasc.html
+		// 1. Resampling the recorded path into a fixed number of points that are evenly spaced along the path
+		// 2. Rotate the path so that the first point is directly to the right of the path's center of mass
+		// 3. Scaling the path (non-uniformly) to a fixed height and width
+		// 4. For each reference path, calculating the average distance for the corresponding points in the input path. The path with the lowest average point distance is the match.
+		int i;
+		const int samplePoints = kSamplePoints;
+		CGPoint samples[samplePoints];
+		int c = [[self touchPoints] count];
+		
+		// Load up the samples.  We use a very simplistic method for this; the JavaScript version is much more sophisticated.
 		for (i = 0; i < samplePoints; i++)
 		{
-			template[i] = [[templateSamples objectAtIndex:i] CGPointValue];
+			samples[i] = [[[self touchPoints] objectAtIndex:MAX(0, (c-1)*i/(samplePoints-1))] CGPointValue];
 		}
-		float score = DistanceAtBestAngle(samples, samplePoints, template);
-		NSLog(@"  %@ => %0.2f", templateName, score);
-		if (score < best)
+		
+		CGPoint center = Centroid(samples, samplePoints);
+		if (outCenter)
+			*outCenter = center;
+		Translate(samples, samplePoints, -center.x, -center.y); // Recenter
+		
+		// Now rotate the path around 0,0, since the points have been transformed to that point.
+		// Find the angle of the first point:
+		CGPoint firstPoint = samples[0];
+		float firstPointAngle = atan2(firstPoint.y, firstPoint.x);
+		NSLog(@"firstPointAngle=%0.2f", firstPointAngle*360.0f/(2.0f*M_PI));
+		if (outRadians)
+			*outRadians = firstPointAngle;
+		Rotate(samples, samplePoints, -firstPointAngle);
+		
+		CGPoint lowerLeft, upperRight; // For finding the boundaries of the gesture
+		for (i = 0; i < samplePoints; i++)
 		{
-			bestTemplateName = [NSString stringWithString:templateName];
-			best = score;
+			CGPoint pt = samples[i];
+			if (pt.x < lowerLeft.x)
+				lowerLeft.x = pt.x;
+			if (pt.y < lowerLeft.y)
+				lowerLeft.y = pt.y;
+			if (pt.x > upperRight.x)
+				upperRight.x = pt.x;
+			if (pt.y > upperRight.y)
+				upperRight.y = pt.y;
 		}
-	}
-	NSLog(@"Best: %@ with %0.2f", bestTemplateName, best);
-	if (outScore)
-		*outScore = best;
-	
-	self.resampledPoints = [NSMutableArray arrayWithCapacity:samplePoints];
-	for (i = 0; i < samplePoints; i++)
-	{
-		CGPoint pt = samples[i];
-		[resampledPoints addObject:[NSValue valueWithCGPoint:pt]];
-	}
-	
-	// Serialize the samples as JSON:
+		float scale = 2.0f/MAX(upperRight.x - lowerLeft.x, upperRight.y - lowerLeft.y);
+		Scale(samples, samplePoints, scale, scale);
+		
+		center = Centroid(samples, samplePoints);
+		Translate(samples, samplePoints, -center.x, -center.y); // Recenter
+		
+		// Now we can compare the samples against our known samples:
+		NSString *bestTemplateName = nil;
+		float best = INFINITY;
+		for (NSString *templateName in [templates allKeys])
+		{
+			NSArray *templateSamples = [templates objectForKey:templateName];
+			CGPoint template[samplePoints];
+			NSAssert(samplePoints == [templateSamples count], @"Template size mismatch");
+			for (i = 0; i < samplePoints; i++)
+			{
+				template[i] = [[templateSamples objectAtIndex:i] CGPointValue];
+			}
+			float score = DistanceAtBestAngle(samples, samplePoints, template);
+			NSLog(@"  %@ => %0.2f", templateName, score);
+			if (score < best)
+			{
+				bestTemplateName = [NSString stringWithString:templateName];
+				best = score;
+			}
+		}
+		NSLog(@"Best: %@ with %0.2f", bestTemplateName, best);
+		if (outScore)
+			*outScore = best;
+		
+		self.resampledPoints = [NSMutableArray arrayWithCapacity:samplePoints];
+		for (i = 0; i < samplePoints; i++)
+		{
+			CGPoint pt = samples[i];
+			[resampledPoints addObject:[NSValue valueWithCGPoint:pt]];
+		}
+		
+		// Serialize the samples as JSON:
 #ifndef NDEBUG
-	NSMutableString *string = [NSMutableString stringWithString:@"\"template_name\": [ "];
-	for (i = 0; i < samplePoints; i++)
-	{
-		CGPoint pt = samples[i];
-		[string appendFormat:@"\t[%0.2f, %0.2f], ", pt.x, pt.y];
-	}
-	[string appendString:@"],\n"];
-	NSLog(@"Read:\n%@", string);
+		NSMutableString *string = [NSMutableString stringWithString:@"\"template_name\": [ "];
+		for (i = 0; i < samplePoints; i++)
+		{
+			CGPoint pt = samples[i];
+			[string appendFormat:@"[%0.2f, %0.2f], ", pt.x, pt.y];
+		}
+		[string appendString:@"],\n"];
+		NSLog(@"Read:\n%@", string);
 #endif
-	[bestTemplateName retain]; // +1 retain count because it is autoreleased, and we're about to drain the pool.
-	[pool release];
-	return [bestTemplateName autorelease];
+		return bestTemplateName;
+	}
 }
 
 @end

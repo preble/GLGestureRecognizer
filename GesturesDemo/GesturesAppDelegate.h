@@ -1,5 +1,5 @@
 //
-//  GesturesViewController.h
+//  GesturesAppDelegate.h
 //  Gestures
 //
 //  Created by Adam Preble on 4/27/09.
@@ -8,9 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@interface GesturesViewController : UIViewController {
+@interface GesturesAppDelegate : NSObject <UIApplicationDelegate>
 
-}
+@property (nonatomic, strong) UIWindow *window;
 
 @end
 

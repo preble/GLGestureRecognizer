@@ -10,7 +10,13 @@
 #import "GLGestureRecognizer.h"
 #import "GLGestureRecognizer+JSONTemplates.h"
 
-@interface GestureView ()
+@interface GestureView () {
+	GLGestureRecognizer *recognizer;
+	CGPoint center;
+	float score, angle;
+}
+@property (nonatomic, copy) NSString *caption;
+
 @end
 
 @implementation GestureView
@@ -24,11 +30,6 @@
     return self;
 }
 
-- (void)dealloc {
-	self.caption = nil;
-	[recognizer release];
-    [super dealloc];
-}
 
 - (void)awakeFromNib
 {
