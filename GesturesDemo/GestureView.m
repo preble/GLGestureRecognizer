@@ -35,7 +35,16 @@
 {
 	recognizer = [[GLGestureRecognizer alloc] init];
 	NSData *jsonData = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Gestures" ofType:@"json"]];
-	[recognizer loadTemplatesFromJsonData:jsonData];
+
+	BOOL ok;
+	NSError *error;
+	ok = [recognizer loadTemplatesFromJsonData:jsonData error:&error];
+	if (!ok)
+	{
+		NSLog(@"Error loading gestures: %@", error);
+		self.caption = @"Error loading gestures.";
+		return;
+	}
 	
 	self.caption = @"";
 }

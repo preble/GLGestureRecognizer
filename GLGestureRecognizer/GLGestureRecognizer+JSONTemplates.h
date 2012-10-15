@@ -12,6 +12,6 @@
 
 @interface GLGestureRecognizer (JSONTemplates)
 
-- (BOOL)loadTemplatesFromJsonData:(NSData *)jsonData;
+- (BOOL)loadTemplatesFromJsonData:(NSData *)jsonData error:(NSError **)errorOut;
 
 @end
